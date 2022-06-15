@@ -1,7 +1,7 @@
 import type { LoaderFunction, MetaFunction } from "remix";
 import { json, useLoaderData } from "remix";
 
-import countries from "../lib/countries.json";
+import countries from "../data/countries.json";
 
 export let meta: MetaFunction = () => {
   return {

@@ -33,19 +33,22 @@ export let action: ActionFunction = async ({ request }) => {
   });
 };
 
+type LoaderData = {
+  bucket?: string
+}
 export let loader: LoaderFunction = async ({ request }) => {
   let session = await unencryptedSession.getSession(
     request.headers.get("Cookie")
   );
 
-  let bucket = session.get(SESSION_KEY);
+  let bucket: LoaderData["bucket"] = session.get(SESSION_KEY);
   if (typeof bucket !== "string") {
-    bucket = Math.random() > 0.5 ? "a" : "b";
+    bucket = Math.random() >= 0.5 ? "a" : "b";
   }
 
   session.set(SESSION_KEY, bucket);
 
-  return json(
+  return json<LoaderData>(
     { bucket },
     {
       headers: {
@@ -56,7 +59,7 @@ export let loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function AbTesting() {
-  let { bucket } = useLoaderData();
+  let { bucket } = useLoaderData<LoaderData>();
 
   return (
     <main className="container mx-auto prose px-4 py-8">
@@ -70,7 +73,7 @@ export default function AbTesting() {
         after re-loading the page you will remain in the assigned bucket.
       </p>
 
-      <p>Bucket: {bucket ? bucket : "none"}</p>
+      <p>Bucket: {bucket ?? "none"}</p>
 
       <div>
         <Form method="post" className="inline-block" replace>
