@@ -12,11 +12,14 @@ import {
   Outlet,
   useCatch,
   useLoaderData,
+  useMatches
 } from "remix";
 
 import Navbar from "./components/navbar";
 import { useScrollRestoration } from "./utils/scroll";
-import { unencryptedSession } from "./sessions.server";
+import { getUnencryptedSession } from "./sessions.server";
+
+import type { MatchesFunction, PageHandler } from "~/types";
 
 import tailwindStylesUrl from "./styles/tailwind.css";
 
@@ -25,16 +28,20 @@ export let links: LinksFunction = () => {
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
-  let session = await unencryptedSession.getSession(
-    request.headers.get("Cookie")
-  );
-  let theme = session.get("theme") || "dark";
+  let session = await getUnencryptedSession(request);
+
+  let theme = session.get("theme") ?? null;
+if (!theme || theme === null) theme = "dark";
 
   return json({ theme });
 };
 
 export let unstable_shouldReload: ShouldReloadFunction = ({ submission }) => {
   return !!submission && submission.action === "/themes";
+};
+
+export let handle: PageHandler = {
+  scripts = true
 };
 
 function Document({
@@ -47,7 +54,11 @@ function Document({
   theme?: string;
 }) {
   useScrollRestoration();
-
+const matches: MatchesFunction = useMatches();
+let handle = matches.some((match) => {
+  if (!matches || !matches.handle) return null;
+  return matches.handle 
+})
   return (
     <html lang="en" data-theme={theme || "dark"}>
       <head>
