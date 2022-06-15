@@ -1,7 +1,11 @@
 import { Link } from "remix";
 import { useLocation } from "react-router-dom";
+import type { FC } from "react";
 
-export default function Navbar() {
+interface NavbarProps {
+  title?: string 
+}
+let Navbar: FC<NavbarProps> = ({ title }) => {
   let { pathname } = useLocation();
 
   return (
@@ -30,7 +34,7 @@ export default function Navbar() {
         </div>
       ) : null}
       <div className="flex-1 px-2 mx-2">
-        <span className="text-lg font-bold">Remix + Cloudflare = ❤️</span>
+        <span className="text-lg font-bold">{title ? title.toUppercase() : "Remix + Cloudflare = ❤️"}</span>
       </div>
     </div>
   );
