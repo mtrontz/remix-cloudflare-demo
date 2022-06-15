@@ -7,5 +7,9 @@ export let unencryptedSession = createCookieSessionStorage({
   },
 });
 
-type ReqHeaders = ReturnType< typeof getUnencryptedSession>
-export let getUnencryptedSession = (request: Request): ReqHeaders|null => await unencryptedSession.getSession(request.headers.get("Cookie") ?? null);
+type SessionData = ReturnType< typeof getUnencryptedSession>
+export let getUnencryptedSession = (request: Request): SessionData | null => await unencryptedSession.getSession(request.headers.get("Cookie") ?? null);
+
+interface GlobalSettings {
+  
+}
