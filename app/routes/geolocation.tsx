@@ -10,24 +10,29 @@ export let meta: MetaFunction = () => {
   };
 };
 
+type LoaderData = {
+  formattedLocation: string
+  country: string 
+};
+
 export let loader: LoaderFunction = ({ request }) => {
   let cf = (request as any).cf as IncomingRequestCfProperties;
 
-  let country = countries.find((c) => c.cca2 === cf.country);
+  let country: LoaderData["country"] = countries.find((c) => c.cca2 === cf.country);
 
-  let formattedLocation = "";
+  let formattedLocation: LoaderData["formattedLocation"] = "";
   if (cf.city) formattedLocation += cf.city + ", ";
   if (cf.region) formattedLocation += cf.region + ", ";
   formattedLocation += cf.country;
 
-  return json({
+  return json<LoaderData>({
     formattedLocation,
     country,
   });
 };
 
 export default function Geolocation() {
-  let { formattedLocation, country } = useLoaderData();
+  let { formattedLocation, country } = useLoaderData<LoaderData>();
 
   return (
     <main className="container mx-auto prose px-4 py-8">

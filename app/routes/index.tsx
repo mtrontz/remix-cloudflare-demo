@@ -1,4 +1,4 @@
-import type { MetaFunction } from "remix";
+import type { MetaFunction, LoaderFunction } from "remix";
 import { Link } from "remix";
 
 export let meta: MetaFunction = () => {
